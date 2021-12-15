@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- xmlns : xml namespace, 현재 xml에서 대표로 사용할 namespace 지정 -> 대표로 사용하면 접두어 생략가능-->
+<!-- beans를 대표 xmlns로 지정 -> beans라는 접두어 생략하여 beans사용 가능, 생략 안하고 붙여서 태그 쓰려고 하면 에러남-->
+<!-- servlet-context.xml에서는 mvc가 대표 xmlns로 지정되어 있어 beans:beans 이렇게 접두어 붙여야함 -->
+<!-- mvc uri 없어서 mvc안에 있는 annotation-driven과 resources태그 사용하려니 에러남 -> Source옆 Namespaces탭 들어가서 mvc 선택하여 추가 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<!-- annotation-driven태그는 mvc 안에 들어있는 태그 : 객체를 만들때 annotaion방식을 사용하겠다는 설정, 없으면 annotation이 인식되지 않음  -->
+	<mvc:annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<!-- resources태그는 mvc 안에 들어있는 태그 : css/js/image폴더 두는 webapp밑의 resources 위치 지정 -->
+	<mvc:resources mapping="/resources/**" location="/resources/" /> 
+	
+	<!-- 그래서 view에서 <script src="resources/js/jquery-3.6.0.min.js"></script> 이렇게 resources/ 해서 접근 -->
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+<!-- <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> -->
+	<!-- bean태그는 beans안에 있는 것 : 객체 생성 태그  -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> <!-- class : 객체의 타입. 필수 속성 -->
+		<property name="prefix" value="/WEB-INF/views/member/" /> <!-- views/member/ 안에 다 넣을 거기 때문에 member/ 추가 -->
+		<property name="suffix" value=".jsp" /> <!-- property태그: setter같이 필드에 값 집어넣는 것, prefix, suffix라는 필드(변수)에 값 할당   -->
+	</bean>
+	
+	<!-- component-scan태그는 context 안에 들어있는 태그 : base-package 안의 요소들을 스캔해서(읽어 들여서) 활성화하겠다는 태그 -->
+	<context:component-scan base-package="com.kh.spring" /> 
+
+</beans>
