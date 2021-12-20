@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="memberMapper">
+	<select id="memberLogin" resultMap="memberResultSet"> <!-- parameterType="Member" 생략 -->
+		select *
+		from member
+		where id = #{id} and member_status = 'Y'
+	</select>
+	<!-- parameterType은 안 적어줘도 됨 -> mapper로 넘어올때  MyBatis에서 어떤 타입인지 인지하기 때문 -->
+	<!-- resultType이나 resultMap은 필수입력 사항 -->
+	
+	<resultMap type="Member" id="memberResultSet">
+		<id column="ID" property="id"/>
+		<result column="PWD" property="pwd"/>
+		<result column="NAME" property="name"/>
+		<result column="NICKNAME" property="nickName"/>
+		<result column="EMAIL" property="email"/>
+		<result column="GENDER" property="gender"/>
+		<result column="AGE" property="age"/>
+		<result column="PHONE" property="phone"/>
+		<result column="ADDRESS" property="address"/>
+		<result column="ENROLL_DATE" property="enrollDate"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+		<result column="MEMBER_STATUS" property="memberStatus"/>
+	</resultMap>
+	
+	<insert id="insertMember">
+		insert into member
+		values(#{id}, #{pwd}, #{name}, #{nickName}, #{email}, #{gender}, #{age}, #{phone},
+		       #{address}, SYSDATE, SYSDATE, DEFAULT)
+	</insert>
+	
+<!-- 	<select id="getEncPwd" resultType="string">
+		select pwd
+		from member
+		where id = #{id}
+	</select> -->
+	
+	<update id="updateMember">
+		update member
+		set name = #{name}, nickname = #{nickName}, email = #{email}, gender = #{gender},
+			age = #{age}, phone = #{phone}, address = #{address}, update_date = SYSDATE
+		where id = #{id}
+	</update>
+	
+	<update id="updatePwd">
+		update member
+		set pwd = #{pwd}
+		where id = #{id}
+	</update>
+</mapper>

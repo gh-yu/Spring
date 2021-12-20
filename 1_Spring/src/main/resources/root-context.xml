@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<!-- DataSource등록(DB와 연결하는 정보를 가지고 잇는) -->
+	<!-- MyBatis관련 라이브러리 추가해야 클래스 정보 가져올 수 있음 -> 라이브러리 추가는 pom.xml에서 -->
+	<bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource" destroy-method="close"> 
+	<!-- BasicDataSource에 대한 객체 생성, id를 dataSource라고 지정(객체의 id명), 
+	     destroy-method : 어플리케이션 context종료되어 객체 파기(종료)되었을때 어떤 메소드 호출해서 닫아줄 건지(default가 close임) -->
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+		<property name="username" value="SPRING"/>
+		<property name="password" value="SPRING"/>
+	</bean>
+	
+	<!-- SqlSession등록 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config.xml"/> <!-- SqlSession만들때 참조해야될 파일이 어디에 있는지 -->
+		<!-- classpath: <- 1_Spring/src/main/resources를 가리킴 -->
+		<property name="dataSource" ref="dataSource"/> <!-- SqlSessionFactory를 만들기 위해 사용될 필드를 담고 있는 클래스(객체) -->
+		<!-- ref :  dataSource를 참조하고 있음, 위의 id="dataSource"보고 찾아서  그 정보를 가지고 SqlSession 만들기 위해 속성으로 저장하여 객체 생성-->
+	</bean>
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSession"/> <!-- constructor-arg : 객체 생성시 생성자를 이용하는 방법/ property는 setter를 이용하는 방법 -->
+	</bean>
+	
+	<!-- 트랜잭션 관리 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- 파일 업로드시 사용할 MultipartResolver  -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="100000000"/>
+		<property name="maxInMemorySize" value="100000000"/>
+	</bean>
+	
+</beans>

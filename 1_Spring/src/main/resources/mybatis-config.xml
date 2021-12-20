@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0 EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+<!-- 
+	The content of element type "configuration" must match 
+ 	"(properties?,settings?,typeAliases?,typeHandlers?,objectFactory?,objectWrapperFactory?,
+ 	reflectorFactory?,plugins?,environments?,databaseIdProvider?,mappers?)".
+  	-> 이 순서를 지켜야 됨
+ -->
+ 	<settings>
+ 		<setting name="jdbcTypeForNull" value="NULL"/> 
+ 		<!-- 비어있는 값 또는 null값이 DB에 NULL값으로 들어갈 수 있게 세팅 -->
+ 	</settings>
+ 
+ 	<typeAliases>
+ 		<typeAlias type="com.kh.spring.member.model.vo.Member" alias="Member"/>
+ 		<typeAlias type="com.kh.spring.board.model.vo.Board" alias="Board"/>
+ 	</typeAliases>
+ 	
+	<mappers>
+		<mapper resource="mappers/member-mapper.xml"/>
+		<mapper resource="mappers/board-mapper.xml"/>
+	</mappers>
+</configuration>

@@ -6,7 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="{ contextpath }/resources/js/jquery-3.6.0.min.js"></script> 
+<!-- <script src="{ contextpath }/resources/js/jquery-3.6.0.min.js"></script>  -->
+<script src="${contextPath}/resources/js/jquery-3.6.0.min.js"></script> <!-- 위에 $이 빠져서 오류가 난 것 -->
 <style>
 	.nav {margin-left:auto; margin-right:auto; text-align: center;}
 	.menu {

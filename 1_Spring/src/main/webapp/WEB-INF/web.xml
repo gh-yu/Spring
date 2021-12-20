@@ -6,7 +6,11 @@
 	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+		<!-- <param-value>/WEB-INF/spring/root-context.xml</param-value> --> <!-- src/main/resources로 폴더 이동 -->
+		<param-value>
+			classpath:root-context.xml
+			/WEB-INF/spring/spring-security.xml
+		</param-value> 
 	</context-param>
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
@@ -46,4 +50,44 @@
 		<servlet-name>memberServlet</servlet-name>
 		<url-pattern>*.me</url-pattern>
 	</servlet-mapping> 
+	
+	<!-- 공용 에러페이지 등록 -->
+	<error-page> <!-- 예외 발생시 넘어갈 페이지 -->
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/WEB-INF/views/common/errorPage.jsp</location>
+	</error-page>
+	
+	<!-- 인코딩 필터 적용 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  <!-- Spring에서 filter 지원함 -->
+	    <init-param> 
+	       <param-name>encoding</param-name> 
+	       <param-value>UTF-8</param-value> 
+	    </init-param> 
+	    <init-param> 
+	       <param-name>forceEncoding</param-name> 
+	       <param-value>true</param-value> <!-- 인코딩 설정 강제, response에도 인코딩 설정 적용  -->
+	    </init-param> 
+	 </filter> 
+	 <filter-mapping> 
+	    <filter-name>encodingFilter</filter-name> 
+	    <url-pattern>/*</url-pattern> 
+	 </filter-mapping> 
+	 
+	 <!-- 게시판 관련  -->
+	 <servlet>
+	 	<servlet-name>boardServlet</servlet-name>
+	 	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	 	<init-param>
+	 		<param-name>contextConfigLocation</param-name>
+	 		<param-value>/WEB-INF/spring/appServlet/board-context.xml</param-value>
+	 	</init-param>
+	 </servlet>
+	 <servlet-mapping>
+	 	<servlet-name>boardServlet</servlet-name>
+	 	<url-pattern>*.bo</url-pattern>
+	 </servlet-mapping>
+	 
+	 
 </web-app>

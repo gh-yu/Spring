@@ -29,9 +29,10 @@
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> <!-- class : 객체의 타입. 필수 속성 -->
 		<property name="prefix" value="/WEB-INF/views/member/" /> <!-- views/member/ 안에 다 넣을 거기 때문에 member/ 추가 -->
 		<property name="suffix" value=".jsp" /> <!-- property태그: setter같이 필드에 값 집어넣는 것, prefix, suffix라는 필드(변수)에 값 할당   -->
+		<property name="contentType" value="text/html; charset=UTF-8"/> <!-- response.setContentType과 같은 역할 -->
 	</bean>
 	
 	<!-- component-scan태그는 context 안에 들어있는 태그 : base-package 안의 요소들을 스캔해서(읽어 들여서) 활성화하겠다는 태그 -->
-	<context:component-scan base-package="com.kh.spring" /> 
+	<context:component-scan base-package="com.kh.spring" />
 
 </beans>
