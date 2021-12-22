@@ -9,7 +9,7 @@
 	</select>
 	
 	<select id="selectList" resultMap="boardResultSet">
-		SELECT BOARD_ID, BOARD_TITLE, BOARD_WRITER, NICKNAME
+		SELECT BOARD_ID, BOARD_TITLE, BOARD_WRITER, NICKNAME,
 			   BOARD_CONTENT, ORIGINAL_FILENAME, RENAME_FILENAME, BOARD_COUNT, BOARD_CREATE_DATE, BOARD_MODIFY_DATE, BOARD_STATUS
 		FROM BOARD
 		     JOIN MEMBER ON(BOARD_WRITER = ID)
@@ -36,4 +36,59 @@
 		values(seq_bid.nextval, #{boardTitle}, #{boardWriter}, #{boardContent}, 
 			   #{originalFileName}, #{renameFileName}, DEFAULT, SYSDATE, SYSDATE, DEFAULT)
 	</insert>
+	
+	<update id="updateCount">
+		update board
+		set board_count = board_count + 1
+		where board_id = #{bId}
+	</update>
+	
+	<select id="selectBoard" resultMap="boardResultSet">
+		SELECT * <!-- BOARD_ID, BOARD_TITLE, BOARD_WRITER, NICKNAME,
+			   BOARD_CONTENT, ORIGINAL_FILENAME, RENAME_FILENAME, BOARD_COUNT, BOARD_CREATE_DATE, BOARD_MODIFY_DATE, BOARD_STATUS -->
+		FROM BOARD
+		     JOIN MEMBER ON(BOARD_WRITER = ID)
+		WHERE BOARD_ID = #{bId} AND BOARD_STATUS = 'Y'
+	</select>
+	
+	<update id="updateBoard">
+		update board
+		set board_title = #{boardTitle}, board_content = #{boardContent}, 
+			original_filename = #{originalFileName}, rename_filename = #{renameFileName}
+		where board_id = #{boardId}
+	</update>
+	
+	<!-- view에서 originalFileName 받아오지 않는다고 생각하면 이렇게 동적 쿼리로 파일 수정될 때만 originalFileName 변경  -->
+<!-- 	<update id="updateBoard"> 
+		update board
+		set board_title = #{boardTitle}, board_content = #{boardContent}, 
+			<if test="originalFileNam != null">
+				original_filename = #{originalFileName}, 
+			</if>	
+			rename_filename = #{renameFileName}
+		where board_id = #{boardId}
+	</update> -->
+	
+	<update id="deleteBoard">
+		update board
+		set board_status = 'N'
+		where board_id = #{bId}
+	</update>
+	
+	<insert id="insertReply">
+		insert into reply
+		values(seq_rid.nextval, #{replyContent}, #{refBoardId}, 
+			   #{replyWriter}, sysdate, sysdate, default)
+	</insert>
+	
+	<resultMap type="Reply" id="replyResultSet">
+		<id column="REPLY_ID" property="replyId"/>
+		<result column="REPLY_CONTENT" property="replyContent"/>
+		<result column="REF_BOARD_ID" property="refBoardId"/>
+		<result column="REPLY_WRITER" property="replyWriter"/>
+		<result column="NICKNAME" property="nickName"/>
+		<result column="REPLY_CREATE_DATE" property="replyCreateDate"/>
+		<result column="REPLY_MODIFY_DATE" property="replyModifyDate"/>
+		<result column="REPLY_STATUS" property="replyStatus"/>	
+	</resultMap>
 </mapper>

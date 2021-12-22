@@ -48,4 +48,10 @@
 		set pwd = #{pwd}
 		where id = #{id}
 	</update>
+	
+	<select id="duplicateId" resultType="_int">
+		select count(*)
+		from member
+		where id = #{id} and member_status = 'Y'
+	</select>
 </mapper>

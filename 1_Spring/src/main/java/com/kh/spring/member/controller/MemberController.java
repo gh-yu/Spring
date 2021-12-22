@@ -1,7 +1,9 @@
 package com.kh.spring.member.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -345,4 +348,25 @@ public class MemberController {
 //			throw new MemberException("비밀번호 수정에 실패하였습니다."); // 수정에 실패한 경우(DB 오류), 비밀번호가 일치하지 않은 경우
 //		}
 //	}
+	
+	// String 리턴 -> 내 방식
+//	@RequestMapping("dupId.me")
+//	@ResponseBody
+//	public String duplicateId(@RequestParam("id") String id) {
+//		int result = mService.duplicateId(id);
+//		
+//		return String.valueOf(result); // String.valueOf(int값) : int를 String으로 변환
+//	}
+	
+	// PrintWriter 이용해서 값 보내주기 -> 수업 방식
+	@RequestMapping("dupId.me")
+	public void duplicateId(@RequestParam("id") String id, HttpServletResponse response) {
+		String result = mService.duplicateId(id) == 0 ? "NoDup" : "Dup";
+		
+		try {
+			response.getWriter().print(result);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

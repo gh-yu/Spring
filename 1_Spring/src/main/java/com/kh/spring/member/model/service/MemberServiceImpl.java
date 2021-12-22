@@ -60,4 +60,10 @@ public class MemberServiceImpl implements MemberService {
 		return result;
 	}
 
+	@Override
+	public int duplicateId(String id) {
+		int result = mDAO.duplicateId(sqlSession, id);
+		return result;
+	}
+
 }

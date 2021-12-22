@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.spring.board.model.vo.Board;
 import com.kh.spring.board.model.vo.PageInfo;
+import com.kh.spring.board.model.vo.Reply;
 
 @Repository("bDAO")
 public class BoardDAO {
@@ -29,8 +30,29 @@ public class BoardDAO {
 	}
 
 	public int insertBoard(SqlSessionTemplate sqlSession, Board b) {
-		int result = sqlSession.insert("boardMapper.insertBoard", b);
-		return result;
+//		int result = sqlSession.insert("boardMapper.insertBoard", b);
+//		return result;
+		return sqlSession.insert("boardMapper.insertBoard", b);
 	}
+
+	public int updateCount(SqlSessionTemplate sqlSession, int bId) {
+		return sqlSession.update("boardMapper.updateCount", bId);
+	}	
 	
+	public Board selectBoard(SqlSessionTemplate sqlSession, int bId) {
+		Board b = sqlSession.selectOne("boardMapper.selectBoard", bId);
+		return b;
+	}
+
+	public int updateBoard(SqlSessionTemplate sqlSession, Board b) {
+		return sqlSession.update("boardMapper.updateBoard", b);
+	}
+
+	public int deleteBoard(SqlSessionTemplate sqlSession, int bId) {
+		return sqlSession.update("boardMapper.deleteBoard", bId);
+	}
+
+	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
+		return sqlSession.insert("boardMapper.insertReply", r);
+	}
 }

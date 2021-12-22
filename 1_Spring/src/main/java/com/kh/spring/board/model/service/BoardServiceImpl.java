@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kh.spring.board.model.dao.BoardDAO;
 import com.kh.spring.board.model.vo.Board;
 import com.kh.spring.board.model.vo.PageInfo;
+import com.kh.spring.board.model.vo.Reply;
 
 @Service("bService")
 public class BoardServiceImpl implements BoardService{
@@ -35,5 +36,38 @@ public class BoardServiceImpl implements BoardService{
 	public int insertBoard(Board b) {
 		int result = bDAO.insertBoard(sqlSession, b);
 		return result;
+	}
+
+	@Override
+	public Board selectBoard(int bId, String upd) {
+	
+		int result = 0;
+		if (upd == null) {
+			result = bDAO.updateCount(sqlSession, bId); // readCount
+		}
+
+		Board b = null;
+		if (result > 0 || upd.equals("Y")) {
+			b = bDAO.selectBoard(sqlSession, bId);
+		}
+
+		return b;
+	}
+
+	@Override
+	public int updateBoard(Board b) {
+		int result = bDAO.updateBoard(sqlSession, b);
+		return result;
+	}
+
+	@Override
+	public int deleteBoard(int bId) {
+		int result = bDAO.deleteBoard(sqlSession, bId);
+		return result;
+	}
+
+	@Override
+	public int insertReply(Reply r) {
+		return bDAO.insertReply(sqlSession, r);
 	}
 }

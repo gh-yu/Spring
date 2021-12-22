@@ -34,7 +34,7 @@
 			
 			<td align="left">
 				<c:if test="${ !empty loginUser }">
-					<c:url var="bdetail" value="bdetail.bo">
+ 					<c:url var="bdetail" value="bdetail.bo">
 						<c:param name="bId" value="${ b.boardId }"/>
 						<c:param name="page" value="${ pi.currentPage }"/>
 					</c:url>
@@ -107,5 +107,18 @@
 			</td>
 		</tr>
 	</table>
+	
+<!-- 	<script>
+		$(function(){ /* 이 방법 있고, a href로 하고, 스타일 효과 주면 됨 */
+			$('#tb td').mouseenter(function(){
+				$(this).parent().css({'color':'yellowgreen', 'font-weight':'bold', 'cursor':'pointer'});
+			}).mouseout(function(){
+				$(this).parent().css({'color':'black', 'font-weight':'normal'});
+			}).click(function(){
+				var bId = $(this).parent().children().eq(0).text();
+				location.href="bdetail.bo?bId=" + bId + "&page=" + ${pi. currentPage};
+			});
+		});
+	</script> -->
 </body>
 </html>

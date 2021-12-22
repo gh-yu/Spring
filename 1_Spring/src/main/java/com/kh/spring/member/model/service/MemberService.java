@@ -13,4 +13,6 @@ public interface MemberService {
 	int updateMember(Member m);
 
 	int updatePwd(Member m);
+
+	int duplicateId(String id);
 }

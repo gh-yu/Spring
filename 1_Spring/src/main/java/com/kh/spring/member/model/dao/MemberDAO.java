@@ -37,5 +37,9 @@ public class MemberDAO {
 		
 		return result;
 	}
+
+	public int duplicateId(SqlSessionTemplate sqlSession, String id) {
+		return sqlSession.selectOne("memberMapper.duplicateId", id);
+	}
 	
 }
