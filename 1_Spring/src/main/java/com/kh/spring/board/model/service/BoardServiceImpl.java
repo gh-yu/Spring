@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.spring.board.model.dao.BoardDAO;
 import com.kh.spring.board.model.vo.Board;
@@ -39,6 +40,7 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
+	@Transactional
 	public Board selectBoard(int bId, String upd) {
 	
 		int result = 0;
@@ -69,5 +71,15 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public int insertReply(Reply r) {
 		return bDAO.insertReply(sqlSession, r);
+	}
+
+	@Override
+	public ArrayList<Reply> selectReplyList(int boardId) {
+		return bDAO.selectReplyList(sqlSession, boardId);
+	}
+
+	@Override
+	public ArrayList<Board> getTopList() {
+		return bDAO.getTopList(sqlSession);
 	}
 }

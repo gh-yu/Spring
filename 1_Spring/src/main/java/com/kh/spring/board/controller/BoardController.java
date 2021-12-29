@@ -2,13 +2,17 @@ package com.kh.spring.board.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +24,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
 import com.kh.spring.board.common.Pagination;
 import com.kh.spring.board.model.exception.BoardException;
 import com.kh.spring.board.model.service.BoardService;
@@ -211,12 +218,83 @@ public class BoardController {
 	
 	@RequestMapping("addReply.bo")
 	@ResponseBody
-	public String insertReply(@ModelAttribute Reply r, Model model, HttpSession session) {
+	public String insertReply(@ModelAttribute Reply r, HttpSession session) {
 //		Member m = (Member)model.getAttribute("loginUser"); // 클래스 이름 위에 @SessionAttributes("loginUser") 추가해야됨
 		Member m = (Member)session.getAttribute("loginUser");
 		r.setReplyWriter(m.getId());
 		
-		String result = bService.insertReply(r) == 0? "fail" : "success";
-		return result;
+		int result = bService.insertReply(r);
+		
+		if (result > 0) {
+			return "success";
+		} else {
+			throw new BoardException("댓글 등록에 실패하였습니다.");
+		}
 	}
+
+	// Json으로 댓글 리스트 보내기
+	// web.xml에 forceEncoding true로 설정해줘서 produces 안해도 ajax dataType속성 값을 'json'으로 해놨으면 UTF-8로 인코딩되어 전달됨
+//	@RequestMapping(value="rList.bo", produces="application/json; charset=UTF-8") 
+//	@ResponseBody
+//	public String replyList(@RequestParam("boardId") int boardId) {
+//		ArrayList<Reply> list = bService.selectReplyList(boardId);
+//		
+//		JSONArray jArr = new JSONArray();
+//		for (Reply r : list) {
+//			JSONObject jObj = new JSONObject();
+//			jObj.put("replyId", r.getReplyId());
+//			jObj.put("replyContent", r.getReplyContent());
+//			jObj.put("refBoardId", r.getRefBoardId());
+//			jObj.put("replyWriter", r.getReplyWriter());
+//			jObj.put("nickName", r.getNickName());
+//			jObj.put("replyCreateDate", r.getReplyCreateDate().toString());
+//			// JSON으로는 Date타입을 보내면 error가 나기 때문에 toString해줌(Gson은 상관 없음. 대신 날짜형식 원하는 형식 있으면 포맷 필요)
+//			// 보내지긴 보내지는데 ajax에서 success가 아닌 error쪽에 data 찍히면서 parsererror 뜸
+//			// JSON은 Date형식을 인식하지 못함
+//			jObj.put("replyModifyDate", r.getReplyModifyDate().toString());
+//			jObj.put("replyStatus", r.getReplyStatus());
+//			
+//			jArr.add(jObj);
+//		}
+//		
+//		return jArr.toJSONString();
+//	}	
+	
+	// Gson으로 댓글 리스트 보내기
+	@RequestMapping("rList.bo")
+	public void getReplyList(@RequestParam("boardId") int boardId, HttpServletResponse response) {
+		ArrayList<Reply> list = bService.selectReplyList(boardId);
+		
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd"); // 원하는 날짜 형식으로 포맷 (메소드 체이닝)
+		Gson gson = gb.create();
+		try {
+			//response.setContentType("application/json; charset=UTF-8");
+			// -> web.xml에 forceEncoding true로 설정해줘서 setContentType안해도
+			// ajax dataType속성 값을 'json'으로 해놨으면 UTF-8로 인코딩되어 전달됨
+			
+			gson.toJson(list, response.getWriter());
+		} catch (JsonIOException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping("topList.bo")
+	public void getTopList(HttpServletResponse response) {
+		ArrayList<Board> list = bService.getTopList();
+		
+		// response.setContentType("application/json; charset=UTF-8"); 
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
+		Gson gson = gb.create();
+		try {
+			gson.toJson(list, response.getWriter());
+		} catch (JsonIOException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 }

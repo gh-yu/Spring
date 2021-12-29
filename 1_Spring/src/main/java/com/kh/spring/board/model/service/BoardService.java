@@ -21,6 +21,10 @@ public interface BoardService {
 	int deleteBoard(int bId);
 
 	int insertReply(Reply r);
+
+	ArrayList<Reply> selectReplyList(int boardId);
+
+	ArrayList<Board> getTopList();
 	
 	
 	

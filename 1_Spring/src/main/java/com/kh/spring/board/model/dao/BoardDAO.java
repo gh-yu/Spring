@@ -55,4 +55,12 @@ public class BoardDAO {
 	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
 		return sqlSession.insert("boardMapper.insertReply", r);
 	}
+
+	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession, int boardId) {
+		return (ArrayList)sqlSession.selectList("boardMapper.selectReplyList", boardId);
+	}
+
+	public ArrayList<Board> getTopList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("boardMapper.getTopList");
+	}
 }

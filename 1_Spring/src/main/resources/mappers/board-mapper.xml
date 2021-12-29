@@ -56,13 +56,13 @@
 		set board_title = #{boardTitle}, board_content = #{boardContent}, 
 			original_filename = #{originalFileName}, rename_filename = #{renameFileName}
 		where board_id = #{boardId}
-	</update>
+	</update> <!-- 이거 말고 밑에거 활용하기 -->
 	
 	<!-- view에서 originalFileName 받아오지 않는다고 생각하면 이렇게 동적 쿼리로 파일 수정될 때만 originalFileName 변경  -->
 <!-- 	<update id="updateBoard"> 
 		update board
 		set board_title = #{boardTitle}, board_content = #{boardContent}, 
-			<if test="originalFileNam != null">
+			<if test="originalFileName != null">
 				original_filename = #{originalFileName}, 
 			</if>	
 			rename_filename = #{renameFileName}
@@ -81,6 +81,14 @@
 			   #{replyWriter}, sysdate, sysdate, default)
 	</insert>
 	
+	<select id="selectReplyList" resultMap="replyResultSet">
+		select *
+		from reply
+			 join member on(reply_writer = id)
+		where ref_board_id = #{boardId} and reply_status = 'Y'
+		order by reply_id desc
+	</select>
+	
 	<resultMap type="Reply" id="replyResultSet">
 		<id column="REPLY_ID" property="replyId"/>
 		<result column="REPLY_CONTENT" property="replyContent"/>
@@ -91,4 +99,28 @@
 		<result column="REPLY_MODIFY_DATE" property="replyModifyDate"/>
 		<result column="REPLY_STATUS" property="replyStatus"/>	
 	</resultMap>
+	
+	<select id="getTopList" resultMap="boardResultSet">
+  		<![CDATA[
+  		SELECT *
+		FROM (SELECT BOARD_ID, BOARD_TITLE, BOARD_WRITER, NICKNAME,
+			  		 BOARD_CONTENT, ORIGINAL_FILENAME, RENAME_FILENAME, BOARD_COUNT, BOARD_CREATE_DATE, BOARD_MODIFY_DATE, BOARD_STATUS
+			  FROM BOARD
+		      	   JOIN MEMBER ON(BOARD_WRITER = ID)
+		      WHERE BOARD_STATUS = 'Y' 
+			  ORDER BY BOARD_COUNT DESC, BOARD_ID DESC)
+		WHERE ROWNUM <= 5
+		]]> <!-- <![CDATA[ ]]> 사이에 쿼리 넣어주면 태그가 아닌 DATA로  인식 -->
+	<!-- WHERE ROWNUM <= 5 --> 
+	<!-- The content of elements must consist of well-formed character data or markup. -->
+	<!-- 요소 콘텐츠는 올바른 형식의 문자 데이터 또는 마크업으로 구성되어야 합니다. xml에서는 < 가 태그의 시작 <로 인식해서 그런지 에러가 뜸-->
+	<!-- MyBatis -> 쿼리의 태그화 / '<'를 부등호가 아닌 태그의 시작으로 인지-->
+	<!-- WHERE ROWNUM BETWEEN 1 AND 5로 하거나  <![CDATA[ ]]> 사이에 쿼리 넣어주면 태그가 아닌 DATA로  인식-->
+	<!-- 서브쿼리로 할 경우 -->
+	<!-- SELECT *
+		FROM BOARD_TOP5
+		WHERE ROWNUM BETWEEN 1 AND 5 -->
+	</select> 		
+
+	
 </mapper>

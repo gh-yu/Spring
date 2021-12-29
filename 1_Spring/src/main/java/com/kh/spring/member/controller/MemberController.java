@@ -6,6 +6,8 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.spring.log.Log4jTest;
 import com.kh.spring.member.model.exception.MemberException;
 import com.kh.spring.member.model.service.MemberService;
 import com.kh.spring.member.model.vo.Member;
@@ -27,6 +30,7 @@ import com.kh.spring.member.model.vo.Member;
 @Controller // 객체 생성, Controller 성질을 갖게 생성(MemberController를 Controller객체로 등록시키려면 @Controller 어노테이션 추가해야됨, 어노테이션 없을시 객체 등록이 안됨)
 public class MemberController {
 	
+	private Logger logger = LoggerFactory.getLogger(MemberController.class);
 	// private MemberService mService = new MemberService();
 	
 	@Autowired // Marks a constructor, field, setter method, or config method as to be autowired by Spring's dependency injection facilities.
@@ -199,7 +203,8 @@ public class MemberController {
 	}
 	
 	@RequestMapping("enrollView.me") // post인지 get방식인지 안 적어줘도 알아서 인식
-	public String joinFormView() {
+	public String enrollView() {
+		logger.debug("회원등록페이지");
 		return "memberJoin";
 	}
 	
@@ -257,6 +262,7 @@ public class MemberController {
 		Member loginMember = mService.memberLogin(m);
 		if (loginMember != null && bcrypt.matches(m.getPwd(), loginMember.getPwd())) { // 평문 암호와 암호화된 암호가 같은지 확인해주는 메소드
 			model.addAttribute("loginUser", loginMember);
+			// logger.info(loginMember.getId());
 			return "redirect:home.do";
 		} else {
 			throw new MemberException("로그인에 실패하였습니다."); // select 실패한 경우(해당 id 없거나 비활 상태 or DB오류) & 비밀번호가 일치하지 않는 경우

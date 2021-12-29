@@ -23,6 +23,12 @@
 	
 	<context:component-scan base-package="com.kh.spring" />
 	
+	<interceptors>
+		<interceptor>
+			<mapping path="/**"/> <!-- "/**" : 모든 요청(url)에 다 적용  -->
+			<beans:bean id="loggerInterceptor" class="com.kh.spring.common.interceptor.TestInterceptor"/> <!-- 실행되는 객체 지정 -->
+		</interceptor>
+	</interceptors>
 	
 	
 </beans:beans>

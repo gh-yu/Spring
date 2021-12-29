@@ -21,4 +21,15 @@
 	</bean>
 
 	<context:component-scan base-package="com.kh.spring"></context:component-scan>
+	
+	<mvc:interceptors>
+ 		<mvc:interceptor>
+			<mvc:mapping path="/**"/> <!-- "/**" : 모든 요청(url)에 다 적용 --> 
+			<bean id="loggerInterceptor" class="com.kh.spring.common.interceptor.TestInterceptor"/> <!-- 실행되는 객체 지정 -->
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/blist.bo"/> <!-- blist.bo로 들어갈 때만 적용되는 interceptor -->
+			<bean id="boardInterceptor" class="com.kh.spring.common.interceptor.BoardEnterInterceptor"/> <!-- 실행되는 객체 지정 -->
+		</mvc:interceptor>
+	</mvc:interceptors>
 </beans>

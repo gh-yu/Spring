@@ -93,7 +93,7 @@
 							}
 							
 							$('#d3').html(html);
-							
+							// $('#d3').append(html); // append하면 여러번 누르면 계속 붙여짐
 						},
 						error: function(data){
 							console.log(data);

@@ -115,17 +115,82 @@
 			var rContent = $('#rContent').val();
 			var refBoardId = ${board.boardId};
 			
+			if (rContent == '') {
+				alert("댓글 내용을 입력해주세요.");
+			} else {
+				$.ajax({
+					url: 'addReply.bo',
+					data: {replyContent:rContent, refBoardId:refBoardId},
+					success: function(data) {
+						console.log(data);
+						if (data == 'success') {
+							getReplyList(); // 댓글 등록 성공 시 다시 댓글 리스트 불러옴
+							$('#rContent').val(''); // 등록했던거 지워줌
+						}
+					},
+					error: function(data) {
+						console.log(data);
+					}
+				})
+			}
+			
+		});
+		
+		function getReplyList() {
+			var bId = ${board.boardId};
+			
 			$.ajax({
-				url: 'addReply.bo',
-				data: {replyContent:rContent, refBoardId:refBoardId},
-				success: function(data) {
+				url: 'rList.bo',
+				dataType: 'json',
+				data: {boardId:bId},
+				success: function(data){
 					console.log(data);
+					
+					$tableBody = $('#rtb tbody');
+					$tableBody.html(''); // 중복되지 않게 안의 내용 지웠다 다시 채움
+					
+					var $tr;
+					var $writer;
+					var $content;
+					var $date;
+					
+					$('#rCount').text('댓글 (' + data.length + ')');
+					
+					if (data.length > 0) {
+						for(var i in data) {
+							$tr = $('<tr>');
+							$writer = $('<td width="100">').text(data[i].nickName);
+							$content = $('<td>').text(data[i].replyContent);
+							$date = $('<td width="100">').text(data[i].replyCreateDate);
+							
+							$tr.append($writer);
+							$tr.append($content);
+							$tr.append($date);
+							
+							$tableBody.append($tr);
+						}
+					} else {
+						$tr = $('<tr>');
+						$content = $('<td colspan="3">').text("등록된 댓글이 없습니다.");
+						
+						$tr.append($content);
+						$tableBody.append($tr);
+					}
+					
 				},
 				error: function(data) {
 					console.log(data);
 				}
 			})
-		});
+		}
+		
+		$(function(){
+			getReplyList();
+			
+			setInterval(function(){
+				getReplyList();
+			}, 5000); // 5초마다 댓글리스트 불러옴 (1초마다 불러오게 하는게 좋을까?)
+		})
 	</script>
 </body>
 </html>

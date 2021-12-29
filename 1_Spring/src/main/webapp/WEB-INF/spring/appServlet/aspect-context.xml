@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<!-- LoggerAspect1 빈 등록 -->
+	<!-- <bean id="loggerAspect" class="com.kh.spring.common.aop.LoggerAspect1"/> -->
+	
+	<!-- ===== 선언적 AOP 시작 ===== -->
+	<!-- <aop:config> -->
+		<!-- <aop:aspect id="LoggerAspect" ref="loggerAspect"> --> <!-- loggerAspect갹체를 참조해서 실행 -->
+			<!-- <aop:pointcut expression="execution(* com.kh.spring.board..*(..))" id="pcAll"/>  -->
+			<!--  								반환형      클래스명                              매개변수-->
+			<!-- * : 모든 반환형 / ..* : board패키지 안에 있는 클래스 전부 다 / (..) : 모든 매개변수 -->
+	
+			<!-- <aop:before method="loggerAdvice" pointcut-ref="pcAll"/> --> <!-- method: loggerAspect1의 메소드 pointcut-ref: 어떤 pointcut을 참조할 것인지-->
+			<!-- java.lang.IllegalArgumentException: ProceedingJoinPoint is only supported for around advice -->
+<!-- 			<aop:around method="loggerAdvice" pointcut-ref="pcAll"/>		 -->
+<!-- 		</aop:aspect> -->
+<!-- 	</aop:config>	 -->
+	<!-- ===== 선언적 AOP  끝  ===== -->
+	
+	<!-- ===== 프로그래밍적 AOP 시작 ===== -->
+	<aop:aspectj-autoproxy/>
+	<!-- ===== 프로그래밍적 AOP  끝  ===== -->
+	
+		
+	<!-- tx 선언적 방식(xml) -->
+	<!-- transaction-manager : root-context.xml의  transactionManager라는 id값 -->
+<!-- 	<tx:advice id="txAdvice" transaction-manager="transactionManager"> -->
+<!-- 		<tx:attributes> -->
+<!-- 			<tx:method name="selectBoard" read-only="true"/>  -->
+			<!-- selectBoard라는 메소드 -->
+<!-- 		</tx:attributes> -->
+<!-- 	</tx:advice > -->
+<!-- 	<aop:config> -->
+<!-- 		<aop:pointcut expression="execution(* com.kh.spring.board..*(..))" id="boardTx"/> -->
+<!-- 		<aop:advisor advice-ref="txAdvice" pointcut-ref="boardTx"/> -->
+<!-- 	</aop:config> -->
+	
+	
+	<!-- 프로그래밍적 방식(어노테이션) -->
+	<tx:annotation-driven/> <!-- 어노테이션으로 트랜잭션 관리하겠다 -->
+	
+	
+	
+</beans>
