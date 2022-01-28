@@ -43,7 +43,7 @@ public class BoardDAO {
 		Board b = sqlSession.selectOne("boardMapper.selectBoard", bId);
 		return b;
 	}
-
+	
 	public int updateBoard(SqlSessionTemplate sqlSession, Board b) {
 		return sqlSession.update("boardMapper.updateBoard", b);
 	}

@@ -309,7 +309,6 @@ public class MemberController {
 							@RequestParam("newPwd1") String newPwd,
 							/* HttpSession session, */ Model model) {
 		
-//		Member m = (Member)session.getAttribute("loginUser");
 		Member m = (Member)model.getAttribute("loginUser");
 		if (bcrypt.matches(oldPwd, m.getPwd())) {
 			String encPwd = bcrypt.encode(newPwd);

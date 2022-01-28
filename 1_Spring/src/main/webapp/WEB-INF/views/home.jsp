@@ -50,7 +50,7 @@
 					
 					if (data.length > 0) {
 						for(var i in data) {
-							var $tr = $('<tr>');
+							$tr = $('<tr>');
 							// $bId = $('<td width="20">').text(data[i].boardId));
 							$tr.append($('<td width="50">').text(data[i].boardId));
 							$tr.append($('<td>').text(data[i].boardTitle));

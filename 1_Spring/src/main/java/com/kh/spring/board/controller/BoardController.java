@@ -153,7 +153,7 @@ public class BoardController {
 	public String boardUpdateView(@RequestParam("bId") int bId, @RequestParam("page") int page, Model model) {
 		
 		String upd = "Y";
-		Board b = bService.selectBoard(bId, upd); // 수정이기 때문에 조회수 안 올라가게 하는 조치 필요(나중)
+		Board b = bService.selectBoard(bId, upd); // 수정이기 때문에 조회수 안 올라가게 하는 조치
 		
 		model.addAttribute("board", b).addAttribute("page", page);
 		

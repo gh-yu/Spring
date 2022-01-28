@@ -29,7 +29,6 @@
 		values(#{id}, #{pwd}, #{name}, #{nickName}, #{email}, #{gender}, #{age}, #{phone},
 		       #{address}, SYSDATE, SYSDATE, DEFAULT)
 	</insert>
-	
 <!-- 	<select id="getEncPwd" resultType="string">
 		select pwd
 		from member
@@ -54,4 +53,22 @@
 		from member
 		where id = #{id} and member_status = 'Y'
 	</select>
+	
+		<select id="findActiveBlogLike" parameterType="Blog" resultType="Blog">
+			select *
+			from blog
+			where state = 'ACTIVE'
+			<choose>
+				<when test="title != null">
+					and title like '%' || #{title} || '%'
+				</when>
+				<when test="author != null and autor.name != null">
+					and autor_name like '%' || #{autor.name} || '%'
+				</when>
+				<otherwise>
+					and featured = 1
+				</otherwise>					
+			</choose>
+		</select>
+	
 </mapper>
